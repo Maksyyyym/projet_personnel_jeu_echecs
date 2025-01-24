@@ -1,11 +1,16 @@
 from case import Case, Etat
 from piece import Piece, Roi, Dame, Fou, Cavalier, Tour, Pion
 
+lettres = "  abcdefgh  "
 
 class Echiquier:
     def __init__(self):
         self.nombre_rangees = 8
         self.nombre_colonnes = 8
+        self.dictionnaire_cases = {}
+        for numero in range(1, 9):
+            for lettre in "abcdefgh":
+                self.dictionnaire_cases[Case(lettre, numero)] = None
         self.liste_pieces = [Tour("black", Case("a", 8)),
                              Cavalier("black", Case("b", 8)),
                              Fou("black", Case("c", 8)),
@@ -38,38 +43,123 @@ class Echiquier:
                              Pion("white", Case("f", 2)),
                              Pion("white", Case("g", 2)),
                              Pion("white", Case("h", 2))]
-        self.liste_cases_occupees = [Case("a", 8, Etat.OCCUPEE),
-                             Case("b", 8, Etat.OCCUPEE),
-                             Case("c", 8, Etat.OCCUPEE),
-                             Case("e", 8, Etat.OCCUPEE),
-                             Case("d", 8, Etat.OCCUPEE),
-                             Case("f", 8, Etat.OCCUPEE),
-                             Case("g", 8, Etat.OCCUPEE),
-                             Case("h", 8, Etat.OCCUPEE),
-                             Case("a", 7, Etat.OCCUPEE),
-                             Case("b", 7, Etat.OCCUPEE),
-                             Case("c", 7, Etat.OCCUPEE),
-                             Case("d", 7, Etat.OCCUPEE),
-                             Case("e", 7, Etat.OCCUPEE),
-                             Case("f", 7, Etat.OCCUPEE),
-                             Case("g", 7, Etat.OCCUPEE),
-                             Case("h", 7, Etat.OCCUPEE),
-                             Case("a", 1, Etat.OCCUPEE),
-                             Case("b", 1, Etat.OCCUPEE),
-                             Case("c", 1, Etat.OCCUPEE),
-                             Case("e", 1, Etat.OCCUPEE),
-                             Case("d", 1, Etat.OCCUPEE),
-                             Case("f", 1, Etat.OCCUPEE),
-                             Case("g", 1, Etat.OCCUPEE),
-                             Case("h", 1, Etat.OCCUPEE),
-                             Case("a", 2, Etat.OCCUPEE),
-                             Case("b", 2, Etat.OCCUPEE),
-                             Case("c", 2, Etat.OCCUPEE),
-                             Case("d", 2, Etat.OCCUPEE),
-                             Case("e", 2, Etat.OCCUPEE),
-                             Case("f", 2, Etat.OCCUPEE),
-                             Case("g", 2, Etat.OCCUPEE),
-                             Case("h", 2, Etat.OCCUPEE)]
+        for piece in self.liste_pieces:
+            self.dictionnaire_cases[piece.case] = piece
+
+    def casesHG(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre_gauche
+        prochain_numero = numero_haut
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            ancienne_pos_lettre = lettres.index(prochaine_lettre)
+            prochaine_lettre = lettres[ancienne_pos_lettre - 1]
+            prochain_numero = prochain_numero + 1
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
+
+    def casesH(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre
+        prochain_numero = numero_haut
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            prochain_numero = prochain_numero + 1
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
+
+
+    def casesHD(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre_droite
+        prochain_numero = numero_haut
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            ancienne_pos_lettre = lettres.index(prochaine_lettre)
+            prochaine_lettre = lettres[ancienne_pos_lettre + 1]
+            prochain_numero = prochain_numero + 1
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
+
+    def casesD(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre_droite
+        prochain_numero = numero
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            ancienne_pos_lettre = lettres.index(prochaine_lettre)
+            prochaine_lettre = lettres[ancienne_pos_lettre + 1]
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
+
+    def casesBD(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre_droite
+        prochain_numero = numero_bas
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            ancienne_pos_lettre = lettres.index(prochaine_lettre)
+            prochaine_lettre = lettres[ancienne_pos_lettre + 1]
+            prochain_numero = prochain_numero - 1
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
+
+    def casesB(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre
+        prochain_numero = numero_bas
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            prochain_numero = prochain_numero - 1
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
+
+    def casesBG(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre_gauche
+        prochain_numero = numero_bas
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            ancienne_pos_lettre = lettres.index(prochaine_lettre)
+            prochaine_lettre = lettres[ancienne_pos_lettre - 1]
+            prochain_numero = prochain_numero - 1
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
+
+    def casesG(self, piece):
+        lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
+            = piece.informationsCase()
+
+        prochaine_lettre = lettre_gauche
+        prochain_numero = numero
+        case = Case(prochaine_lettre, prochain_numero)
+        while case.estValide() and self.dictionnaire_cases[case] is None:
+            liste_cases.append(case)
+            ancienne_pos_lettre = lettres.index(prochaine_lettre)
+            prochaine_lettre = lettres[ancienne_pos_lettre - 1]
+            case = Case(prochaine_lettre, prochain_numero)
+        return liste_cases
 
     def obtenirPiece(self, case):
         for piece in self.liste_pieces:
@@ -78,9 +168,23 @@ class Echiquier:
         else:
             return None
 
-    def cotesBloquesPiece(self, piece):
+    def deplacementsPermis(self, piece):
+        liste_cases = piece.deplacementsPossibles()
+        for case in piece.deplacementsPossibles():
+            if (case not in self.casesHG(piece) and case not in self.casesH(piece) and case not in self.casesHD(piece)
+                    and case not in self.casesD(piece) and case not in self.casesBD(piece)
+                    and case not in self.casesB(piece) and case not in self.casesBG(piece)
+                    and case not in self.casesG(piece)):
+                liste_cases.remove(case)
+        return liste_cases
+
+
+    def casesBloqueesPiece(self, piece):
         lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
             = piece.informationsCase()
+        liste_lettres = [lettre_gauche, lettre, lettre_droite]
+        liste_numeros = [numero_haut, numero, numero_bas]
+
         caseHG = Case(lettre_gauche, numero_haut)
         caseH = Case(lettre, numero_haut)
         caseHD = Case(lettre_droite, numero_haut)
@@ -90,11 +194,32 @@ class Echiquier:
         caseBG = Case(lettre_gauche, numero_bas)
         caseG = Case(lettre_gauche, numero)
 
-        for case in self.liste_cases_occupees:
-            if case == caseHG or case == caseH or case == caseHD or case == caseD or case == caseBD or case == caseB or case == caseBG or case == caseBG or case == caseG:
-                liste_cases.append(case)
+        for l in liste_lettres:
+            for n in liste_numeros:
+                case = Case(l, n)
+                if case.estValide():
+                    p = self.dictionnaire_cases[case]
+                    if case != piece.case and p is not None:
+                        liste_cases.append(case)
+                        if case == caseHG:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesHG()
+                        if case == caseH:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesH()
+                        if case == caseHD:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesHD()
+                        if case == caseD:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesD()
+                        if case == caseBD:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesBD()
+                        if case == caseB:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesB()
+                        if case == caseBG:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesBG()
+                        if case == caseG:
+                            liste_cases = liste_cases + self.dictionnaire_cases[case].casesG()
 
         return liste_cases
+
     def enlever_piece(self, piece):
         piece.case.caseDevientLibre()
         self.liste_pieces.remove(piece)

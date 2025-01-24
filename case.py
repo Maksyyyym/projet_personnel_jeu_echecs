@@ -9,6 +9,7 @@ class Etat(Enum):
 class Case:
 
     def __init__(self, p_lettre, p_numero, p_etat=Etat.LIBRE):
+        __match_args__ = ("lettre", "numero")
         self.lettre = str(p_lettre)
         self.numero = int(p_numero)
         self.etat = p_etat

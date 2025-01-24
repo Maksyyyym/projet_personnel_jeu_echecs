@@ -1,6 +1,7 @@
 from tkinter import *
 from echiquier import Echiquier
 from case import Case
+from piece import *
 
 
 class Jeu(Tk):
@@ -28,7 +29,7 @@ class Jeu(Tk):
         self.menu.add_cascade(label="Options", menu=self.options_menu)
 
         self.case_choisie = None
-        self.etat = "choix_piece"
+        self.etat = "P"
 
         self.echiquier = Echiquier()
         self.dessiner_cases()
@@ -38,27 +39,29 @@ class Jeu(Tk):
 
     def selectionner(self, event):
         self.actualiser_echiquier()
-        self.etat = "choix piece"
+        self.etat = "P"
         position_x = event.x // self.pixels_par_case
         position_y = event.y // self.pixels_par_case
         lettre, numero = self.traduction_coordonnees_vers_case(position_x, position_y)
         case_choisie = Case(lettre, numero)
         piece_choisie = None
         if case_choisie.estValide():
-            for piece in self.echiquier.liste_pieces:
-                if piece.case == case_choisie and piece.couleur == self.joueur:
-                    self.case_choisie = case_choisie
-                    self.souligner_case(self.case_choisie, "yellow")
-                    piece_choisie = piece
-                    self.etat = "choix déplacement"
-                    break
-            if self.etat == "choix déplacement":
-                liste_cotes_bloques = self.echiquier.cotesBloquesPiece(piece_choisie)
-                for case in piece_choisie.deplacementsPossibles():
-                    if case not in self.echiquier.liste_cases_occupees:
-                        self.souligner_case(case, "green")
-                    elif self.echiquier.obtenirPiece(case).couleur != self.joueur:
-                        self.souligner_case(case, "red")
+            piece_choisie = self.echiquier.dictionnaire_cases[case_choisie]
+            if piece_choisie is not None and piece_choisie.couleur == self.joueur:
+                self.case_choisie = case_choisie
+                self.souligner_case(self.case_choisie, "yellow")
+                self.etat = "D"
+
+        if self.etat == "D":
+            if type(piece_choisie) is Cavalier:
+                deplacements = piece_choisie.deplacementsPossibles()
+            else:
+                deplacements = self.echiquier.deplacementsPermis(piece_choisie)
+            for depl in deplacements:
+                if self.echiquier.dictionnaire_cases[depl] is not None and self.echiquier.dictionnaire_cases[depl].couleur != self.joueur:
+                    self.souligner_case(depl, "red")
+                elif self.echiquier.dictionnaire_cases[depl] is None:
+                    self.souligner_case(depl, "green")
 
 
     def souligner_case(self, case, couleur):

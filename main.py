@@ -4,9 +4,9 @@ from echiquier import Echiquier
 from jeu import Jeu
 
 echiquier = Echiquier()
-for piece in echiquier.liste_pieces:
-    if type(piece) is Pion:
-        print(piece.attaquesPossibles())
+piece = Pion("black", Case('b', 7))
+print(echiquier.casesB(piece))
+print(echiquier.deplacementsPermis(piece))
 
 jeu = Jeu()
 jeu.mainloop()
