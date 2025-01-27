@@ -13,9 +13,11 @@ class Piece:
     def __repr__(self):
         return self.icone
 
+    def __eq__(self, p_piece):
+        return self.icone == p_piece.icone
+
     def deplacementsPossibles(self):
         return
-
 
     def informationsCase(self):
         liste_cases = []
@@ -294,12 +296,13 @@ class Tour(Piece):
 
 
 class Pion(Piece):
-    def __init__(self, p_couleur, p_case):
+    def __init__(self, p_couleur, p_case, n_deplacement=0):
         super().__init__(p_couleur, p_case)
         if self.couleur == "white":
             self.icone = "♙"
         if self.couleur == "black":
             self.icone = "♟"
+        self.n_deplacement = n_deplacement
 
     def deplacementsPossibles(self):
         lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
@@ -309,10 +312,18 @@ class Pion(Piece):
             caseH = Case(lettre, numero_haut)
             if caseH.estValide():
                 liste_cases.append(caseH)
+            if self.n_deplacement == 0:
+                caseHH = Case(lettre, numero_haut + 1)
+                if caseHH.estValide():
+                    liste_cases.append(caseHH)
         if self.couleur == "black":
             caseB = Case(lettre, numero_bas)
             if caseB.estValide():
                 liste_cases.append(caseB)
+            if self.n_deplacement == 0:
+                caseBB = Case(lettre, numero_bas - 1)
+                if caseBB.estValide():
+                    liste_cases.append(caseBB)
 
         return liste_cases
 

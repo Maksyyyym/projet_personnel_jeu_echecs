@@ -46,6 +46,18 @@ class Echiquier:
         for piece in self.liste_pieces:
             self.dictionnaire_cases[piece.case] = piece
 
+    def modifierCasePiece(self, piece, case):
+        for p in self.liste_pieces:
+            if p == piece:
+                piece.case = case
+                break
+
+    def retirerPiece(self, piece):
+        for p in self.liste_pieces:
+            if p == piece:
+                self.liste_pieces.remove(p)
+                break
+
     def casesHG(self, piece):
         lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
             = piece.informationsCase()
@@ -53,12 +65,15 @@ class Echiquier:
         prochaine_lettre = lettre_gauche
         prochain_numero = numero_haut
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             ancienne_pos_lettre = lettres.index(prochaine_lettre)
             prochaine_lettre = lettres[ancienne_pos_lettre - 1]
             prochain_numero = prochain_numero + 1
             case = Case(prochaine_lettre, prochain_numero)
+
         return liste_cases
 
     def casesH(self, piece):
@@ -68,12 +83,14 @@ class Echiquier:
         prochaine_lettre = lettre
         prochain_numero = numero_haut
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             prochain_numero = prochain_numero + 1
             case = Case(prochaine_lettre, prochain_numero)
-        return liste_cases
 
+        return liste_cases
 
     def casesHD(self, piece):
         lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
@@ -82,12 +99,15 @@ class Echiquier:
         prochaine_lettre = lettre_droite
         prochain_numero = numero_haut
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             ancienne_pos_lettre = lettres.index(prochaine_lettre)
             prochaine_lettre = lettres[ancienne_pos_lettre + 1]
             prochain_numero = prochain_numero + 1
             case = Case(prochaine_lettre, prochain_numero)
+
         return liste_cases
 
     def casesD(self, piece):
@@ -97,11 +117,14 @@ class Echiquier:
         prochaine_lettre = lettre_droite
         prochain_numero = numero
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             ancienne_pos_lettre = lettres.index(prochaine_lettre)
             prochaine_lettre = lettres[ancienne_pos_lettre + 1]
             case = Case(prochaine_lettre, prochain_numero)
+
         return liste_cases
 
     def casesBD(self, piece):
@@ -111,12 +134,15 @@ class Echiquier:
         prochaine_lettre = lettre_droite
         prochain_numero = numero_bas
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             ancienne_pos_lettre = lettres.index(prochaine_lettre)
             prochaine_lettre = lettres[ancienne_pos_lettre + 1]
             prochain_numero = prochain_numero - 1
             case = Case(prochaine_lettre, prochain_numero)
+
         return liste_cases
 
     def casesB(self, piece):
@@ -126,10 +152,13 @@ class Echiquier:
         prochaine_lettre = lettre
         prochain_numero = numero_bas
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             prochain_numero = prochain_numero - 1
             case = Case(prochaine_lettre, prochain_numero)
+
         return liste_cases
 
     def casesBG(self, piece):
@@ -139,12 +168,15 @@ class Echiquier:
         prochaine_lettre = lettre_gauche
         prochain_numero = numero_bas
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             ancienne_pos_lettre = lettres.index(prochaine_lettre)
             prochaine_lettre = lettres[ancienne_pos_lettre - 1]
             prochain_numero = prochain_numero - 1
             case = Case(prochaine_lettre, prochain_numero)
+
         return liste_cases
 
     def casesG(self, piece):
@@ -154,8 +186,10 @@ class Echiquier:
         prochaine_lettre = lettre_gauche
         prochain_numero = numero
         case = Case(prochaine_lettre, prochain_numero)
-        while case.estValide() and self.dictionnaire_cases[case] is None:
+        while case.estValide():
             liste_cases.append(case)
+            if self.dictionnaire_cases[case] is not None:
+                break
             ancienne_pos_lettre = lettres.index(prochaine_lettre)
             prochaine_lettre = lettres[ancienne_pos_lettre - 1]
             case = Case(prochaine_lettre, prochain_numero)
@@ -175,7 +209,7 @@ class Echiquier:
                     and case not in self.casesD(piece) and case not in self.casesBD(piece)
                     and case not in self.casesB(piece) and case not in self.casesBG(piece)
                     and case not in self.casesG(piece)):
-                liste_cases.remove(case)
+                liste_cases.pop(liste_cases.index(case))
         return liste_cases
 
 

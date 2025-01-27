@@ -4,8 +4,8 @@ from echiquier import Echiquier
 from jeu import Jeu
 
 echiquier = Echiquier()
-piece = Pion("black", Case('b', 7))
-print(echiquier.casesB(piece))
+piece = Pion("white", Case('a', 2))
+print(echiquier.casesH(piece))
 print(echiquier.deplacementsPermis(piece))
 
 jeu = Jeu()
