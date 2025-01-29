@@ -3,6 +3,7 @@ from piece import Piece, Roi, Dame, Fou, Cavalier, Tour, Pion
 
 lettres = "  abcdefgh  "
 
+
 class Echiquier:
     def __init__(self):
         self.nombre_rangees = 8
@@ -203,15 +204,17 @@ class Echiquier:
             return None
 
     def deplacementsPermis(self, piece):
-        liste_cases = piece.deplacementsPossibles()
-        for case in piece.deplacementsPossibles():
-            if (case not in self.casesHG(piece) and case not in self.casesH(piece) and case not in self.casesHD(piece)
-                    and case not in self.casesD(piece) and case not in self.casesBD(piece)
-                    and case not in self.casesB(piece) and case not in self.casesBG(piece)
-                    and case not in self.casesG(piece)):
-                liste_cases.pop(liste_cases.index(case))
-        return liste_cases
-
+        if type(piece) is Cavalier:
+            return piece.deplacementsPossibles()
+        else:
+            liste_cases = piece.deplacementsPossibles()
+            for case in piece.deplacementsPossibles():
+                if (case not in self.casesHG(piece) and case not in self.casesH(piece) and case not in self.casesHD(piece)
+                        and case not in self.casesD(piece) and case not in self.casesBD(piece)
+                        and case not in self.casesB(piece) and case not in self.casesBG(piece)
+                        and case not in self.casesG(piece)):
+                    liste_cases.pop(liste_cases.index(case))
+            return liste_cases
 
     def casesBloqueesPiece(self, piece):
         lettre, numero, lettre_gauche, numero_haut, lettre_droite, numero_bas, liste_cases \
@@ -254,11 +257,11 @@ class Echiquier:
 
         return liste_cases
 
-    def enlever_piece(self, piece):
+    def enleverPiece(self, piece):
         piece.case.caseDevientLibre()
         self.liste_pieces.remove(piece)
 
-    def afficher_echiquier(self):
+    def afficherEchiquier(self):
         print(" abcdefgh \n")
         print(8)
         for piece in self.liste_pieces:
@@ -267,3 +270,23 @@ class Echiquier:
             print("\n")
             while piece.case.numero == 7:
                 print(piece)
+
+    def detectionEchec(self, couleur):
+        caseR = None
+        for case in self.dictionnaire_cases:
+            if self.dictionnaire_cases[case] is not None and type(self.dictionnaire_cases[case]) is Roi:
+                if self.dictionnaire_cases[case].couleur == couleur:
+                    caseR = case
+        return self.roiMenace(caseR, couleur)
+
+    def roiMenace(self, caseR, couleur):
+        print(caseR)
+        for piece in self.dictionnaire_cases.values():
+            if piece is not None and piece.couleur != couleur:
+                if type(piece) is Pion and caseR in piece.attaquesPossibles():
+                    # print("ÉCHEC")
+                    return True
+                elif caseR in self.deplacementsPermis(piece):
+                    # print("ÉCHEC")
+                    return True
+        return False

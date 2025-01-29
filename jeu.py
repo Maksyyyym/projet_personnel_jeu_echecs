@@ -71,15 +71,26 @@ class Jeu(Tk):
 
                     else:
                         self.deplacement_piece(case_choisie, piece_choisie)
+        self.echiquier.detectionEchec(self.joueur)
 
     def choix_piece(self, case_choisie, piece_choisie):
         self.piece_amie = piece_choisie
         self.case_depart = case_choisie
 
-        if type(self.piece_amie) is Cavalier:
-            self.deplacements = self.piece_amie.deplacementsPossibles()
-        else:
-            self.deplacements = self.echiquier.deplacementsPermis(self.piece_amie)
+        self.deplacements = self.echiquier.deplacementsPermis(self.piece_amie)
+        if type(self.piece_amie) is Roi:
+            print(self.deplacements)
+            temp = []
+            for depl in self.deplacements:
+                print(depl)
+                if not self.echiquier.roiMenace(depl, self.joueur):
+                    temp.append(depl)
+                    #print(temp)
+                    #liste_cases.pop(liste_cases.index(case))
+                    print("REMOVE")
+                    print(depl)
+            self.deplacements = temp
+
         for depl in self.deplacements:
             if (self.echiquier.dictionnaire_cases[depl] is not None and
                     self.echiquier.dictionnaire_cases[depl].couleur != self.joueur):
@@ -93,6 +104,7 @@ class Jeu(Tk):
                         self.echiquier.dictionnaire_cases[depl].couleur != self.joueur):
                     self.colorier_case(depl, "red")
         self.colorier_case(self.case_depart, "#cece4f")
+        self.canvas.delete('piece')
         self.dessiner_pieces()
 
     def deplacement_piece(self, case_choisie, piece_choisie):
